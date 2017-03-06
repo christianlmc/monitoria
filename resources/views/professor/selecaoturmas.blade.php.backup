@@ -1,0 +1,69 @@
+@extends('professor.layout.auth')
+
+@section('content')
+
+<script type="text/javascript">
+var selecionados = new Array();
+
+$(document).ready(function(){
+	$('#monitores').multiSelect({
+		selectableHeader: "<div> Disponíveis </div>",
+		selectionHeader: "<div> Selecionados </div>",
+		keepOrder: true,
+
+		afterSelect: function(values)
+		{
+			selecionados.push(values[0]);
+			$("#monitores_selecionados").val(selecionados);
+		},
+		afterDeselect: function(values)
+		{
+			index = selecionados.indexOf(values[0]);
+			selecionados.splice(index,1);
+			$("#monitores_selecionados").val(selecionados);
+		},
+	});
+
+});
+</script>
+    
+<div class="container">
+	<div class="row">
+		<div class="panel-heading">
+			{{ $turma[0]->disciplina->nome }} - 
+			{{ $turma[0]->turma }}
+		</div>
+	</div>
+		{!! Form::open(['class' => 'form-horizontal', 'method' => 'post', 'url' => 'professor/turmas/salvar']) !!}
+		  	<select id="monitores" multiple="multiple" name="selecionados[]">
+		    	@foreach($monitores as $monitor)
+					<option value='{{ $monitor->user->matricula }}'
+						@if( $monitor->remuneracao  == "remunerada")
+				       		style="background-color: #2de011"
+				       	@elseif( $monitor->remuneracao  == "ambas")
+				       		style="background-color: #e08011"
+				       	@else
+				       		style="background-color: #1ec0ed"
+
+				       	@endif
+
+				       	@if($monitor->aprovado)
+				       		selected
+				       	@endif
+				    >
+
+				    {{ $monitor->user->name }}
+				    </option>
+
+		  		@endforeach
+		  	</select>
+		  	<input id="monitores_selecionados" type="hidden" name="monitores_selecionados[]" value=""/>
+{{-- 		  	<input id="cod_turma" type="hidden" name="cod_turma" value="{{ $turma->id}}"/>
+ --}}		{!! Form::submit('Salvar',['id' => 'btn_inscricao']); !!}
+		{!! Form::close() !!}
+</div>
+
+
+
+@endsection
+

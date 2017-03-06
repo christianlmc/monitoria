@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Adldap;
+
+
+use App\Turma;
+use App\User;
+use App\Monitoria;
+use DB;
+
+
+class ProfessorController extends Controller
+{
+    /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function turmas()
+    {
+
+    	$professor = Auth::user()->name;
+
+        // pegando o primeiro e o ultimo nome do ldap
+        $parts = explode(" ", $professor);
+        $lastname = '%'.array_pop($parts);
+        $firstname = implode(" ", $parts).'%';
+
+        $turmas = Turma::where('professor', 'like', $firstname)
+                         ->where('professor', 'like', $lastname)
+                         ->get();
+        
+        return view('professor/turmas' ,compact('turmas'));
+    }
+
+    public function salvar(Request $request)
+    {
+        $professor = Auth::user()->name;
+        // pegando o primeiro e o ultimo nome do ldap
+        $parts = explode(" ", $professor);
+        $lastname = '%'.array_pop($parts);
+        $firstname = implode(" ", $parts).'%';
+
+        $turmas = Turma::where('professor', 'like', $firstname)
+                         ->where('professor', 'like', $lastname)
+                         ->get();
+        $monitores = Monitoria::all();
+
+
+        $selecionados = $request->input('selecionados');
+
+        foreach($selecionados as $selecionado){
+            Monitoria::where('fk_matricula', '=', $selecionado)
+                        ->update(['aprovado' => 1]);
+        }
+
+
+        return view('professor/turmas' ,compact('turmas', 'monitores'));
+
+    }
+
+    public function selecaoTurmas(Request $request)
+    {  
+        $monitores = Monitoria::all();
+        return view('professor/turmas/selecaoTurmas', compact('monitores'));  
+    }
+
+
+}
