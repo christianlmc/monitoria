@@ -80,14 +80,14 @@ return [
             'model' => App\Admin::class,
         ],
 
-        'professors' => [
-            'driver' => 'eloquent',
-            'model' => App\Professor::class,
-        ],
 //        'professors' => [
- //           'driver' => 'adldap',
-  //          'model' => App\Professor::class,
-   //     ],
+//            'driver' => 'eloquent',
+//            'model' => App\Professor::class,
+//        ],
+        'professors' => [
+           'driver' => 'adldap',
+           'model' => App\Professor::class,
+        ],
 
         'users' => [
             'driver' => 'eloquent',

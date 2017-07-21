@@ -217,6 +217,11 @@ function isInscrito(){
             <div class="alert alert-info">
             	Regras de Monitoria - <a target="_blank" id='link_monitoria' href="http://www.saa.unb.br/acompanhamento-academico/22-monitoria">Link</a>
             </div>
+	    @if(session('error'))
+            <div class="alert alert-danger">
+		{{session('error')}}
+            </div>
+     	    @endif
             <div class="panel panel-primary panel-default">
                 <div class="panel-heading"><h3>Inscrição na monitoria</h3></div>
                 <div class="panel-body">

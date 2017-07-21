@@ -24,8 +24,10 @@ $(document).ready(function(){
 								<tr>
 									<th>Matrícula</th>
 									<th>Nome</th>
+									<th>Email</th>
 									<th>Disciplina</th>
 									<th>Turma</th>
+									<th>Professor</th>
 									<th>Remuneração</th>
 									<th>Status</th>
 									<th>Obs</th>
@@ -36,8 +38,10 @@ $(document).ready(function(){
 								<tr>
 									<td>{{ $monitor->fk_matricula }}</td>
 									<td>{{ $monitor->user->name }}</td>
+									<td>{{ $monitor->user->email }}</td>
 									<td>{{ $monitor->disciplina->nome }} </td>
 									<td>{{ $monitor->turma->turma }}</td>
+									<td>{{ $monitor->turma->professor }}</td>
 									<td>{{ $monitor->remuneracao }}</td>
 									<td>{{ $monitor->status->nome }}</td>
 									<td>{{ $monitor->descricao_status}}</td>

@@ -126,8 +126,9 @@ function enviar($id_monitoria, $status, $descricao){
 				$('#monitor_'+$id_monitoria).removeClass('bg-success');	
 			}			 
 			var monitor = document.getElementById('monitor_'+$id_monitoria);
-	                monitor.children[2].innerHTML = "Acao ja realizada";
-	                monitor.children[3].innerHTML = "";
+	            monitor.children[2].innerHTML = "Acao ja realizada";
+	            monitor.children[3].remove();
+	        $('#monitor_'+$id_monitoria+' .colspan_fix').attr('colspan', 2);
 
 			atualizarBolsas();
 		},
@@ -213,7 +214,6 @@ $(document).ready(function(){
 		</div>
 		</div>
 
-	
 
 		
 		@foreach ($turmas as $turma)
@@ -242,21 +242,26 @@ $(document).ready(function(){
 						@endif
 						<td>{{ $monitor->fk_matricula }}</td>
 						<td>{{ $monitor->user->name }}</td>
-						@if(!$monitor->fk_status_monitoria_id == 5 && !$monitor->fk_status_monitoria_id == 6) 
-						<td>
-							<button id='aceitar' class='btn btn-success' onclick="aceitar({{ $monitor->id }}, 5, null)" ><span class='glyphicon glyphicon-ok'></span></button>
-						</td>
-                                                <td>
-                                                        <input name='monitor_id' type='hidden' value='{{ $monitor->id }}'>
-							<button id='recusar' class='btn btn-danger' onclick="aceitar({{ $monitor->id }}, 6, null)"><span class='glyphicon glyphicon-remove'></span></button>
-							<input type='hidden' name='matriculado' id="id_{{ $monitor->id }}"value="Aceito em: {{ $monitor->disciplina->nome }} {{$monitor->turma->turma}}">
-
-                                                </td>
-                                                @else
-                                                <td>
-                                                        Acao ja  realizada.
-                                                </td>
-                                                @endif
+						@if($monitor->fk_status_monitoria_id != 5 && $monitor->fk_status_monitoria_id != 6) 
+							<td class="colspan_fix">
+								<button id='aceitar' class='btn btn-success' onclick="aceitar({{ $monitor->id }}, 5, null)" >
+									<span class='glyphicon glyphicon-ok'></span>
+								</button>
+							</td>
+	                        <td>
+	                            <input name='monitor_id' type='hidden' value='{{ $monitor->id }}'>
+								<button id='recusar' class='btn btn-danger' onclick="aceitar({{ $monitor->id }}, 6, null)">
+									<span class='glyphicon glyphicon-remove'></span>
+								</button>
+								<input type='hidden' name='matriculado' 
+								id="id_{{ $monitor->id }}"value="Aceito em: 
+								{{ $monitor->disciplina->nome }} {{$monitor->turma->turma}}">
+	                        </td>
+                        @else
+	                        <td colspan="2">
+	                            Acao ja realizada.
+	                        </td>
+                        @endif
 
 {{-- 						<td>
 							<button id='cancelar' class='btn btn-primary' onclick="aceitar({{ $monitor->id }}, 3, 'N/A')"><span class='glyphicon glyphicon-share-alt icon-flipped icon-rotate'></span></button>

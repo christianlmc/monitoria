@@ -22,8 +22,10 @@ $(document).ready(function(){
 								<tr>
 									<th>Matrícula</th>
 									<th>Nome</th>
+									<th>Email</th>
 									<th>Disciplina</th>
 									<th>Turma</th>
+									<th>Professor</th>
 									<th>Remuneração</th>
 									<th>Status</th>
 									<th>Obs</th>
@@ -34,8 +36,10 @@ $(document).ready(function(){
 								<tr>
 									<td><?php echo e($monitor->fk_matricula); ?></td>
 									<td><?php echo e($monitor->user->name); ?></td>
+									<td><?php echo e($monitor->user->email); ?></td>
 									<td><?php echo e($monitor->disciplina->nome); ?> </td>
 									<td><?php echo e($monitor->turma->turma); ?></td>
+									<td><?php echo e($monitor->turma->professor); ?></td>
 									<td><?php echo e($monitor->remuneracao); ?></td>
 									<td><?php echo e($monitor->status->nome); ?></td>
 									<td><?php echo e($monitor->descricao_status); ?></td>

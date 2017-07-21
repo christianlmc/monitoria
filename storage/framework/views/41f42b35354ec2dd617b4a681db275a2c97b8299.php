@@ -71,11 +71,15 @@
                         <li <?php echo e((Request::is('admin/voluntarios') ? 'class=active' : '')); ?>>
                             <a href="<?php echo e(url('/admin/voluntarios')); ?>">Voluntários</a>
                         </li>
+                        
                         <li <?php echo e((Request::is('admin/definicoes') ? 'class=active' : '')); ?>>
                             <a href="<?php echo e(url('/admin/definicoes')); ?>">Configurações</a>
                         </li>
                         <li <?php echo e((Request::is('admin/relatorio') ? 'class=active' : '')); ?>>
                             <a href="<?php echo e(url('/admin/relatorio')); ?>">Relatório</a>
+                        </li>
+                        <li <?php echo e((Request::is('admin/editarAluno') ? 'class=active' : '')); ?>>
+                            <a href="<?php echo e(url('admin/editarAluno')); ?>">Editar Alunos</a>
                         </li>
 
                     <?php endif; ?>

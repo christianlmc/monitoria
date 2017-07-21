@@ -30,6 +30,7 @@ $(document).ready(function(){
 			<tr>
 				<th>Matrícula</th>
 				<th>Nome</th>
+				<th>Email</th>
 				<th>Tipo</th>
 				<th>Prioridade</th>
 				<th>Status</th>
@@ -41,6 +42,7 @@ $(document).ready(function(){
 				<tr>
 						<td>{{ $monitor->fk_matricula }}</td>
 						<td>{{ $monitor->user->name }}</td>
+						<td>{{ $monitor->user->email }}</td>
 						<td>@if($monitor->remuneracao == 'remunerada')
 									Remunerada
 							@elseif($monitor->remuneracao == 'voluntaria')

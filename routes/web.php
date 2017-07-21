@@ -37,10 +37,10 @@ Route::group(['prefix' => 'aluno', 'middleware' => 'auth'], function(){
 	});
 
 
-    Route::get('/inscricao', 'InscricaoController@index');
-    Route::post('/confirmar', 'InscricaoController@confirmar');
-    Route::get('/inscricao/disciplina/{cod_disciplina}', 'InscricaoController@search_turmas');
-    Route::get('/inscricao/dados_bancarios/{id_banco}', 'InscricaoController@dados_bancarios');
+  Route::get('/inscricao', 'InscricaoController@index');
+  Route::post('/confirmar', 'InscricaoController@confirmar');
+  Route::get('/inscricao/disciplina/{cod_disciplina}', 'InscricaoController@search_turmas');
+  Route::get('/inscricao/dados_bancarios/{id_banco}', 'InscricaoController@dados_bancarios');
     
  	Route::get('/acompanhar', 'InscricaoController@acompanhar');
  	Route::get('/configurar/email', 'AlunoController@email');
@@ -58,12 +58,15 @@ Route::get('/professor/login', 'ProfessorAuth\LoginController@showLoginForm');
 Route::post('professor/login', 'ProfessorAuth\LoginController@login');
 Route::get('/professor',function(){return view('/professor/home');});
 
+//Route::get('professor/register', 'ProfessorAuth\RegisterController@showRegistrationForm');
+//Route::post('professor/register', 'ProfessorAuth\RegisterController@register');
+
+// descomentar ambas
+
 
 Route::group(['prefix' => 'professor', 'middleware' => 'auth:professor'], function () {
   Route::post('/logout', 'ProfessorAuth\LoginController@logout');
 
-  Route::get('/register', 'ProfessorAuth\RegisterController@showRegistrationForm');
-  Route::post('/register', 'ProfessorAuth\RegisterController@register');
 
 
   Route::post('/password/reset', 'ProfessorAuth\ResetPasswordController@reset');
@@ -85,8 +88,8 @@ Route::group(['prefix' => 'professor', 'middleware' => 'auth:professor'], functi
 
 Route::get('/admin/login', 'AdminAuth\LoginController@showLoginForm');
 Route::post('/admin/login', 'AdminAuth\LoginController@login');
-Route::get('/admin/register', 'AdminAuth\RegisterController@showRegistrationForm');
-Route::post('/admin/register', 'AdminAuth\RegisterController@register');
+//Route::get('/admin/register', 'AdminAuth\RegisterController@showRegistrationForm');
+//Route::post('/admin/register', 'AdminAuth\RegisterController@register');
 
 Route::get('/admin', function(){return view('admin/home');});
 
@@ -101,6 +104,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:admin'], function () {
 
   Route::get('/editarAluno', 'AdminController@editarAluno');
   Route::post('/editarAluno', 'AdminController@salvarAluno');
+
+  Route::post('/utilizarCrawler', 'AdminController@utilizarCrawler');
 
   Route::get('/exportarcsv', 'AdminController@exportar_csv');
   Route::post('/logout', 'AdminAuth\LoginController@logout');

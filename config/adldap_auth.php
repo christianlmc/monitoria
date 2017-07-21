@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'login_fallback' => env('ADLDAP_LOGIN_FALLBACK', true),
+    'login_fallback' => env('ADLDAP_LOGIN_FALLBACK', false),
 
     /*
     |--------------------------------------------------------------------------
@@ -110,7 +110,7 @@ return [
     |
     */
 
-    'password_sync' => env('ADLDAP_PASSWORD_SYNC', true),
+    'password_sync' => env('ADLDAP_PASSWORD_SYNC', false),
 
     /*
     |--------------------------------------------------------------------------

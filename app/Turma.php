@@ -37,6 +37,7 @@ class Turma extends Model
         return Monitoria::where([['fk_turmas_id', $this->id],['remuneracao', $remuneracao]])->count();
     }
     public function monitoresAdminCount($remuneracao){
+
         return Monitoria::where('remuneracao', $remuneracao)
                         ->where('fk_turmas_id', $this->id)
                             ->where(function($query){
@@ -45,5 +46,13 @@ class Turma extends Model
                                         ->orWhere('fk_status_monitoria_id', 6);
                                 })
                                 ->count(); 
+        // return Monitoria::where('remuneracao', $remuneracao)
+        //             ->where(function($query){
+        //                     $query->where('fk_status_monitoria_id', 3)
+        //                         ->orwhere('fk_turmas_id', $this->id)
+        //                         ->orWhere('fk_status_monitoria_id', 5)
+        //                         ->orWhere('fk_status_monitoria_id', 6);
+        //                 })
+        //                 ->count(); 
     }
 }

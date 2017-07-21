@@ -28,6 +28,7 @@ $(document).ready(function(){
 			<tr>
 				<th>Matrícula</th>
 				<th>Nome</th>
+				<th>Email</th>
 				<th>Tipo</th>
 				<th>Prioridade</th>
 				<th>Status</th>
@@ -39,6 +40,7 @@ $(document).ready(function(){
 				<tr>
 						<td><?php echo e($monitor->fk_matricula); ?></td>
 						<td><?php echo e($monitor->user->name); ?></td>
+						<td><?php echo e($monitor->user->email); ?></td>
 						<td><?php if($monitor->remuneracao == 'remunerada'): ?>
 									Remunerada
 							<?php elseif($monitor->remuneracao == 'voluntaria'): ?>

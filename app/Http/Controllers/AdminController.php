@@ -21,6 +21,8 @@ use App\EnumStatusMonitoria;
 */
 class AdminController extends Controller
 {
+
+
     /**
      * Show the application dashboard.
      *
@@ -28,17 +30,17 @@ class AdminController extends Controller
      */
     public function remunerados()
     {
-        $avaliacaoData = Periodo::where('fk_id_descricao', 2)->get();
-        $avaliacaoData = $avaliacaoData[0];
+        $avaliacaoData = Periodo::where('fk_id_descricao', 2)->first();
+        
 
-        $resultadoData = Periodo::where('fk_id_descricao', 6)->get();
-        $resultadoData = $resultadoData[0];
-
+        $resultadoData = Periodo::where('fk_id_descricao', 6)->first();
+        
 
         $avaliacaoData->fim = Carbon::createFromFormat('Y-m-d H:i:s', $avaliacaoData->fim);
         $resultadoData->inicio = Carbon::createFromFormat('Y-m-d H:i:s', $resultadoData->inicio);
 
         $hoje = Carbon::now();
+
         if(!$hoje->between($avaliacaoData->fim,$resultadoData->inicio))
         {
             return view('admin/remunerados')->with('status', 'Fora do período de cadrastamento no SIGRA');
@@ -55,13 +57,17 @@ class AdminController extends Controller
                                 ->orderBy('prioridade')
                                 ->get();
 
-
-        
+                                
         $turmas = Turma::
-                    leftJoin('disciplinas', 'turmas.fk_cod_disciplina', '=', 'disciplinas.cod_disciplina')
+                    leftJoin('disciplinas', 'turmas.fk_cod_disciplina', 'disciplinas.cod_disciplina')
+                    ->leftJoin('vagas', 'turmas.fk_vagas_id', 'vagas.id')
                     ->orderBy('fk_tipo_disciplina_id', 'asc')
                     ->orderBy('c_prat', 'desc')
+                    ->orderBy('t_ocupadas', 'desc')
                     ->get();
+
+
+        //dd($turmas);
 
         $bolsa = Bolsa::orderBy('created_at','desc')->first();
         
@@ -70,11 +76,11 @@ class AdminController extends Controller
     }
     public function voluntarios()
     {
-        $avaliacaoData = Periodo::where('fk_id_descricao', 2)->get();
-        $avaliacaoData = $avaliacaoData[0];
+        $avaliacaoData = Periodo::where('fk_id_descricao', 2)->first();
+        
 
-        $resultadoData = Periodo::where('fk_id_descricao', 6)->get();
-        $resultadoData = $resultadoData[0];
+        $resultadoData = Periodo::where('fk_id_descricao', 6)->first();
+
 
 
         $avaliacaoData->fim = Carbon::createFromFormat('Y-m-d H:i:s', $avaliacaoData->fim);
@@ -98,7 +104,7 @@ class AdminController extends Controller
                                 ->get();
         
         $turmas = Turma::
-                    leftJoin('disciplinas', 'turmas.fk_cod_disciplina', '=', 'disciplinas.cod_disciplina')
+                    leftJoin('disciplinas', 'turmas.fk_cod_disciplina', 'disciplinas.cod_disciplina')
                     ->orderBy('fk_tipo_disciplina_id', 'asc')
                     ->orderBy('c_prat', 'desc')
                     ->get();
@@ -108,22 +114,9 @@ class AdminController extends Controller
 
     public function atualizarStatusMonitoria(Request $data){
 
-    	$monitor = Monitoria::where('id', $data->id_monitoria)->get();
-        $monitor = $monitor[0];
-        
-        // if($data->status == 3){ // caso tenha aceito no sigra, atualizar todas inscricoes com essa matricula
-        // Monitoria::where('fk_matricula', $monitor->fk_matricula)
-        //          ->where(function($query){
-        //                             $query->where('fk_status_monitoria_id', 4)
-        //                                 ->orWhere('fk_status_monitoria_id', 5)
-        //                                 ->orWhere('fk_status_monitoria_id', 7)
-        //                                 ->orWhere('fk_status_monitoria_id', 6);
-        //           })
-        //             ->update(array('fk_status_monitoria_id' => 3, 'descricao_status' => "N/A"));
-        // }
+    	$monitor = Monitoria::where('id', $data->id_monitoria)->first();
 
-
-        if($data->status == EnumStatusMonitoria::aceito_sigra){ // caso tenha aceito no sigra, atualizar todas inscricoes com essa matricula
+      if($data->status == EnumStatusMonitoria::aceito_sigra){ // caso tenha aceito no sigra, atualizar todas inscricoes com essa matricula
     	Monitoria::where('fk_matricula', $monitor->fk_matricula)
                     ->where('fk_status_monitoria_id', 3)
                     ->where('id', '<>', $data->id_monitoria)
@@ -139,12 +132,8 @@ class AdminController extends Controller
     public function definicoes(){
         
         $periodos = Periodo::get();
-        $bolsa = Bolsa::orderBy('created_at','DESC')->first();
-      	if(!$bolsa){
-	 Bolsa::create(['quantidade'=> 1]);
-	 $bolsa = Bolsa::orderBy('created_at','DESC')->first();
-
-	}
+        $bolsa = Bolsa::orderBy('created_at','desc')->first();
+        //$bolsa = $bolsa[0];
         foreach($periodos as $periodo){
           $periodo->inicio =  Carbon::parse($periodo->inicio)->format('d/m/Y H:i');
           $periodo->fim =  Carbon::parse($periodo->fim)->format('d/m/Y H:i');
@@ -183,7 +172,7 @@ class AdminController extends Controller
         }
         else
         {
-            $alunos = User::where('id', '=', $request->id)->get();
+            $alunos = User::where('id', $request->id)->get();
             return Response::json($alunos);
         }
     }
@@ -191,10 +180,10 @@ class AdminController extends Controller
     public function salvarAluno(Request $request)
     {
 
-        User::where('id', '=', $request->id)->update(array('name' => $request->nome, 'matricula' => $request->matricula, 
+        User::where('id', $request->id)->update(array('name' => $request->nome, 'matricula' => $request->matricula, 
                                                             'cpf' => $request->cpf, 'rg' => $request->rg));
 
-        $alunos = User::where('id', '=', $request->id)->get();
+        $alunos = User::where('id', $request->id)->get();
 
         return Response::json($alunos);
     }
@@ -205,14 +194,33 @@ class AdminController extends Controller
                   ->update(['fk_status_monitoria_id' => 6, 'descricao_status' => 'Não há mais bolsas.']);
         return redirect('/admin/voluntarios/');
     }
+
     public function relatorio(){
         $monitores = Monitoria::get();
         return view('/admin/relatorio',compact('monitores'));
     }
 
+    public function utilizarCrawler(){
+        // exec('python ../app/Http/Controllers/Scripts/persistencia_monitoria.py');
+        exec('python ../app/Http/Controllers/Scripts/persistencia_monitoria.py 2>&1', $output, $error);
+        // dd($output, $error);
+
+        if($error == 0)
+        {
+            return redirect('/admin/definicoes')->with(compact('error'));
+        }
+        else
+        {
+            return redirect('/admin/definicoes')->with(compact('output'))
+                                                ->with(compact('error'));
+        }
+    }
+
+
     public function exportar_csv()
     {
-        $headers = array(
+
+       $headers = array(
             'Content-Type'        => 'application/vnd.ms-excel; charset=utf-8',
             'Cache-Control'       => 'must-revalidate, post-check=0, pre-check=0',
             'Content-Disposition' => 'attachment; filename=monitoria.csv',
@@ -222,29 +230,61 @@ class AdminController extends Controller
         $filename = "monitoria.csv";
         $handle = fopen($filename, 'w');
         fputcsv($handle, [
-           "id",
-           "remuneracao",
-           "Matrícula",
-           "Codígo da Disciplina",
-           "Descrição",
-           "Prioridade",
+           "CPF",
+           "NOME DO ALUNO",
+           "MATRICULA",
+           "NOME DO PROFESSOR",
+           "Nº BANCO",
+           "Nº AGENCIA",
+           "Nº CONTA",
+           "CUMPRIU SIM OU NAO",
+           "CODIGO DA DISCIPLINA",
+           "REMUNERACAO",
+           "STATUS",
+           "OBSERVACAO",
         ]);
         Monitoria::chunk(100, function($data) use($handle) {
                 foreach ($data as $row) {
+
                     // Add a new row with data
+                    if($row->user->banco){
                     fputcsv($handle, [
-                       $row->id,
-                       $row->remuneracao,
+                       $row->user->cpf,
+                       $row->user->name,                    
                        $row->fk_matricula,
-                       $row->fk_cod_disciplina,
-                       $row->descricao_status,
-                       $row->prioridade,
-                       $row->turma->turma,
                        $row->turma->professor,
+                       $row->user->banco->codigo,
+                       $row->user->banco->agencia,
+                       $row->user->banco->conta_corrente,
+                       "",
+                       $row->disciplina->cod_disciplina,
+                       $row->remuneracao,
+                       $row->status->nome,                       
+                       $row->descricao_status,
                     ]);
+                    }
+                    else{
+
+                        fputcsv($handle, [
+                           $row->user->cpf,
+                           $row->user->name,                    
+                           $row->fk_matricula,
+                           $row->turma->professor,
+                           "N/A",
+                           "N/A",
+                           "N/A",
+                           "",
+                           $row->disciplina->cod_disciplina,
+                           $row->remuneracao,
+                           $row->status->nome,
+                           $row->descricao_status,
+                        ]);
+                    }
+                    
                 };
         });
         fclose($handle);
         return Response::download($filename, "monitoria.csv", $headers);
     }
 }
+

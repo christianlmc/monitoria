@@ -95,6 +95,9 @@ function enviar($id_monitoria, $status, $descricao){
 				$('#monitor_'+$id_monitoria).removeClass('bg-danger');	
 				$('#monitor_'+$id_monitoria).removeClass('bg-success');	
 			}
+			var monitor = document.getElementById('monitor_'+$id_monitoria);
+            monitor.children[3].innerHTML = "Acao ja realizada";
+            monitor.children[4].remove();
 
 		},
 		error: function(error){
@@ -127,9 +130,10 @@ $(document).ready(function(){
 		    </div>
 		<?php else: ?>
 			<?php $__currentLoopData = $turmas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $turma): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); ?>
+
 			<?php if($turma->monitoresAdminCount('voluntaria') > 0): ?>
 			<div class="panel panel-default">
-				<div class="panel-heading"><h3 class="panel-title" align='center'><?php echo e($turma->disciplina->nome); ?> Turma: <?php echo e($turma->turma); ?></h3></div>
+				<div class="panel-heading"><h3 class="panel-title" align='center'><?php echo e($turma->fk_cod_disciplina); ?> - <?php echo e($turma->disciplina->nome); ?> Turma: <?php echo e($turma->turma); ?></h3></div>
 			  	<div class="panel-body">
 					<table id='turmas_table' class="table table-bordered">
 						<thead>
@@ -154,15 +158,23 @@ $(document).ready(function(){
 							<td><?php echo e($monitor->fk_matricula); ?></td>
 							<td><?php echo e($monitor->user->name); ?></td>
 							<td><?php echo e($monitor->turma->turma); ?></td>
-							<td>
-								<button id='aceitar' class='btn btn-success' onclick="aceitar(<?php echo e($monitor->id); ?>, 5, null)" ><span class='glyphicon glyphicon-ok'></span></button>
-							</td>
-							<td>
-								<input name='monitor_id' type='hidden' value='<?php echo e($monitor->id); ?>'>
-								<button id='recusar' class='btn btn-danger' onclick="aceitar(<?php echo e($monitor->id); ?>, 6, null)"><span class='glyphicon glyphicon-remove'></span></button>
-								<input type='hidden' name='matriculado' id="id_<?php echo e($monitor->id); ?>"					value="Aceito em: <?php echo e($monitor->disciplina->nome); ?> <?php echo e($monitor->turma->turma); ?>"
-								>
-							</td>
+							<?php if($monitor->fk_status_monitoria_id != 5 && $monitor->fk_status_monitoria_id != 6): ?> 
+								<td>
+									<button id='aceitar' class='btn btn-success' onclick="aceitar(<?php echo e($monitor->id); ?>, 5, null)" >
+										<span class='glyphicon glyphicon-ok'></span>
+									</button>
+								</td>
+								<td>
+									<input name='monitor_id' type='hidden' value='<?php echo e($monitor->id); ?>'>
+									<button id='recusar' class='btn btn-danger' onclick="aceitar(<?php echo e($monitor->id); ?>, 6, null)"><span class='glyphicon glyphicon-remove'></span></button>
+									<input type='hidden' name='matriculado' id="id_<?php echo e($monitor->id); ?>"	value="Aceito em: <?php echo e($monitor->disciplina->nome); ?> <?php echo e($monitor->turma->turma); ?>"
+									>
+								</td>
+							<?php else: ?>
+								<td>
+	                            	Ação ja  realizada.
+	                       		</td>
+	                       	<?php endif; ?>
 			
 							
 					  	</tr>

@@ -43,7 +43,12 @@ $(document).ready(function(){
                 bootbox.alert('O perfil de usuário foi atualizado');
             });
         });
-    	$('.editButton').on('click', function() {
+    
+        // $('#tabela_aluno tbody').on('click','tr td .editButton', function() {
+        //     alert('foi');
+        // });
+
+    	$('#tabela_aluno tbody').on('click','tr td .editButton', function() {
 	        // Get the record's ID via attribute
 	        var id = $(this).attr('id');
 

@@ -55,7 +55,22 @@
              .title { 
                  font-size: 84px;
                  color: #636b6f;
-             } 
+             }
+	     
+	    @media (max-width: 600px) { 
+            /* Styles for screen with max width of 600px */
+                .title {
+                    font-size: 74px;
+                    color: #636b6f;
+                }
+            }
+            @media (max-width: 320px) { 
+            /* Styles for screen with max width of 320px */
+                .title {
+                    font-size: 64px;
+                    color: #636b6f;
+                }
+            } 
 		
 
             .links > a {

@@ -26,4 +26,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    public function banco(){
+        return $this->hasOne(Dados_Bancarios::class,  'id' ,'fk_banco');
+    }
 }

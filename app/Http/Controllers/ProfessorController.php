@@ -27,8 +27,7 @@ class ProfessorController extends Controller
     {
         $mostrar = false;
         $hoje = Carbon::now();
-        $aval = Periodo::where('fk_id_descricao', 2)->get();
-        $aval = $aval[0];
+        $aval = Periodo::where('fk_id_descricao', 2)->first();
 
 
         $aval->inicio = Carbon::createFromFormat('Y-m-d H:i:s', $aval->inicio);
@@ -67,13 +66,13 @@ class ProfessorController extends Controller
 
         if($selecionados){
             foreach($selecionados as $selecionado){
-                Monitoria::where('fk_matricula', '=', $selecionado)
-                            ->where('fk_turmas_id', '=', $idturma)
+                Monitoria::where('fk_matricula', $selecionado)
+                            ->where('fk_turmas_id', $idturma)
                             ->update(['fk_status_monitoria_id' => 3]);
             }
         }
 
-        Turma::where('id', '=', $idturma)->update(['fk_status_turma_id' => 2]);
+        Turma::where('id', $idturma)->update(['fk_status_turma_id' => 2]);
         // return $this->turmas();
         return true;
 
@@ -137,7 +136,7 @@ class ProfessorController extends Controller
             }
         }
 
-        Turma::where('id', '=', $request->idTurma)->update(['fk_status_turma_id' => 3]);
+        Turma::where('id', $request->idTurma)->update(['fk_status_turma_id' => 3]);
         return redirect("/professor/turmas");
     }
 
@@ -146,19 +145,16 @@ class ProfessorController extends Controller
         $monitores = Monitoria::where('fk_turmas_id', '=' ,$request->id_turma) 
                                 ->orderby('prioridade', 'asc')
                                 ->get();
-        $turma = Turma::where('id', $request->id_turma)->get();
-        $turma = $turma[0];
+        $turma = Turma::where('id', $request->id_turma)->first();
 
         return view("/professor/acompanhar", compact('monitores','turma'));
     }
     public function frequencia(Request $data){
         $hoje = Carbon::now();
-        $primeira = Periodo::where('fk_id_descricao', 3)->get();
-        $primeira = $primeira[0];
+        $primeira = Periodo::where('fk_id_descricao', 3)->first();
 
 
-        $segunda = Periodo::where('fk_id_descricao', 4)->get();
-        $segunda = $segunda[0];
+        $segunda = Periodo::where('fk_id_descricao', 4)->first();
 
         $primeira->inicio = Carbon::createFromFormat('Y-m-d H:i:s', $primeira->inicio);
         $primeira->fim = Carbon::createFromFormat('Y-m-d H:i:s', $primeira->fim);

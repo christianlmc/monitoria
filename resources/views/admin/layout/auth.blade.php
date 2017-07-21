@@ -73,11 +73,15 @@
                         <li {{{ (Request::is('admin/voluntarios') ? 'class=active' : '') }}}>
                             <a href="{{ url('/admin/voluntarios') }}">Voluntários</a>
                         </li>
+                        
                         <li {{{ (Request::is('admin/definicoes') ? 'class=active' : '') }}}>
                             <a href="{{ url('/admin/definicoes') }}">Configurações</a>
                         </li>
                         <li {{{ (Request::is('admin/relatorio') ? 'class=active' : '') }}}>
                             <a href="{{ url('/admin/relatorio') }}">Relatório</a>
+                        </li>
+                        <li {{{ (Request::is('admin/editarAluno') ? 'class=active' : '') }}}>
+                            <a href="{{ url('admin/editarAluno') }}">Editar Alunos</a>
                         </li>
 {{--                         <li {{{ (Request::is('admin/editarAluno') ? 'class=active' : '') }}}>
                             <a href="{{ url('/admin/editarAluno') }}">Editar Aluno</a>
